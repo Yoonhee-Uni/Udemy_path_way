@@ -93,3 +93,95 @@ All the tables can be inner joined, and you do not need to apply any criteria.
 
 #### Exercise 3
     Examine the code you wrote to define the “Top 5 Price In Category” field back in the ROW_NUMBER exercises. Now that you understand the differences among ROW_NUMBER, RANK, and DENSE_RANK, consider which of these functions would be most appropriate to return a true top 5 products by price, assuming we want to see the top 5 distinct prices AND we want “ties” (by price) to all share the same rank.
+
+
+# LEAD and LAG - Exercises
+#### Exercise 1
+    Create a query with the following columns:
+    “PurchaseOrderID” from the Purchasing.PurchaseOrderHeader table
+    “OrderDate” from the Purchasing.PurchaseOrderHeader table
+    “TotalDue” from the Purchasing.PurchaseOrderHeader table
+    “Name” from the Purchasing.Vendor table, which can be aliased as “VendorName”*
+    *Join Purchasing.Vendor to Purchasing.PurchaseOrderHeader on BusinessEntityID = VendorID
+
+
+    Apply the following criteria to the query:
+    Order must have taken place on or after 2013
+    TotalDue must be greater than $500
+
+#### Exercise 2
+    Modify your query from Exercise 1 by adding a derived column called
+    "PrevOrderFromVendorAmt", that returns the “previous” TotalDue value (relative to the current row) within the group of all orders with the same vendor ID. We are defining “previous” based on order date.
+
+#### Exercise 3
+    Modify your query from Exercise 2 by adding a derived column called
+    "NextOrderByEmployeeVendor", that returns the “next” vendor name (the “name” field from Purchasing.Vendor) within the group of all orders that have the same EmployeeID value in Purchasing.PurchaseOrderHeader. Similar to the last exercise, we are defining “next” based on order date.
+
+#### Exercise 4
+    Modify your query from Exercise 3 by adding a derived column called "Next2OrderByEmployeeVendor" that returns, within the group of all orders that have the same EmployeeID, the vendor name offset TWO orders into the “future” relative to the order in the current row. The code should be very similar to Exercise 3, but with an extra argument passed to the Window Function used.
+
+# FIRST_VALUE - Exercises
+#### Exercise 1
+    Create a query that returns all records - and the following columns - from the HumanResources.Employee table:
+
+    a. BusinessEntityID (alias this as “EmployeeID”)
+    b. JobTitle
+    c. HireDate
+    d. VacationHours
+
+    To make the effect of subsequent steps clearer, also sort the query output by "JobTitle" and HireDate, both in ascending order.
+
+    Now add a derived column called “FirstHireVacationHours” that displays – for a given job title – the amount of vacation hours possessed by the first employee hired who has that same job title. For example, if 5 employees have the title “Data Guru”, and the one of those 5 with the oldest hire date has 99 vacation hours, “FirstHireVacationHours” should display “99” for all 5 of those employees’ corresponding records in the query.
+
+Exercise 2
+    Create a query with the following columns:
+
+    a. “ProductID” from the Production.Product table
+    b. “Name” from the Production.Product table (alias this as “ProductName”)
+    c. “ListPrice” from the Production.ProductListPriceHistory table
+    d. “ModifiedDate” from the Production.ProductListPriceHistory
+
+    You can join the Production.Product and Production.ProductListPriceHistory tables on "ProductID".
+
+    Note that the Production.ProductListPriceHistory table contains a distinct record for every different price a product has been listed at. This means that a single product ID may have several records in this table – one for every list price it has had.
+
+    Also note that the “ModifiedDate” field in this table displays the effective date of each of these prices. So if there are 3 rows in the table for product ID 12345, the row with the oldest modified date also contains the first price in the associated product’s history. Conversely, the row with the most recent modified date also contains the current price of the product.
+
+    To make the effect of subsequent steps clearer, also sort the query output by ProductID and ModifiedDate, both in ascending order.
+
+    Now add a derived column called “HighestPrice” that displays – for a given product – the highest price that product has been listed at. So even if there are 4 records for a given product, this column should only display the all-time highest list price for that product in each of those 4 rows.
+
+    Similarly, create another derived column called “LowestCost” that displays the all-time lowest price for a given product.
+
+    Finally, create a third derived column called “PriceRange” that reflects, for a given product, the difference between its highest and lowest ever list prices.
+
+# Introducing Subqueries - Exercises
+#### Exercise 1
+
+    Write a query that displays the three most expensive orders, per vendor ID, from the Purchasing.PurchaseOrderHeader table. There should ONLY be three records per Vendor ID, even if some of the total amounts due are identical. "Most expensive" is defined by the amount in the "TotalDue" field.
+
+    Include the following fields in your output:
+    PurchaseOrderID
+    VendorID
+    OrderDate
+    TaxAmt
+    Freight
+    TotalDue
+
+    Hints:
+    You will first need to define a field that assigns a unique rank to every purchase order, within each group of like vendor IDs.
+    You'll probably want to use a Window Function with PARTITION BY and ORDER BY to do this.
+    The last step will be to apply the appropriate criteria to the field you created with your Window Function.
+
+#### Exercise 2
+
+    Modify your query from the first problem, such that the top three purchase order amounts are returned, regardless of how many records are returned per Vendor Id.
+
+    In other words, if there are multiple orders with the same total due amount, all should be returned as long as the total due amount for these orders is one of the top three.
+
+    Ultimately, you should see three distinct total due amounts (i.e., the top three) for each group of like Vendor Ids. However, there could be multiple records for each of these amounts.
+
+    Hint: Think carefully about how the different ranking functions (ROW_NUMBER, RANK, and DENSE_RANK) work, and which one might be best suited to help you here.
+
+    Resources for this lecture
+
