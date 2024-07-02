@@ -185,3 +185,141 @@ Exercise 2
 
     Resources for this lecture
 
+# ROWS BETWEEN - Exercises
+#### Exercise 1
+
+    Create a query with the following columns:
+
+    “OrderMonth”, a derived column (you’ll have to create this one yourself) featuring the month number corresponding with the Order Date in a given row
+
+    “OrderYear”, a derived column featuring the year corresponding with the Order Date in a given row
+
+    “SubTotal” from the Purchasing.PurchaseOrderHeader table
+
+    Your query should be an aggregate query – specifically, it should sum “SubTotal”, and group by the remaining fields.
+
+#### Exercise 2
+
+    Modify your query from Exercise 1 by adding a derived column called "Rolling3MonthTotal", that displays  - for a given row - a running total of “SubTotal” for the prior three months (including the current row).
+
+    HINT: You will need to include multiple fields in your ORDER BY to get this to work!
+
+#### Exercise 3
+
+    Modify your query from Exercise 3 by adding another derived column called "MovingAvg6Month", that calculates a rolling average of “SubTotal” for the previous 6 months, relative to the month in the “current” row. Note that this average should NOT include the current row.
+
+#### Exercise 4
+
+    Modify your query from Exercise 3 by adding (yet) another derived column called “MovingAvgNext2Months” , that calculates a rolling average of “SubTotal” for the month in the current row and the next two months after that. This moving average will provide a kind of "forecast" for Subtotal by month.
+
+    Resources for this lecture
+
+# Scalar Subqueries - Exercises
+#### Exercise 1
+
+    Create a query that displays all rows and the following columns from the AdventureWorks2019.HumanResources.Employee table:
+
+    BusinessEntityID
+    JobTitle
+    VacationHours
+
+    Also include a derived column called "MaxVacationHours" that returns the maximum amount of vacation hours for any one employee, in any given row.
+
+#### Exercise 2
+
+    Add a new derived field to your query from Exercise 1, which returns the percent an individual employees' vacation hours are, of the maximum vacation hours for any employee. For example, the record for the employee with the most vacation hours should have a value of 1.00, or 100%, in this column.
+
+    Hints:
+    You can repurpose your logic from "MaxVacationHours" for the denominator.
+    Make sure you multiply at least one side of your equation by 1.0, to ensure the output will be a decimal.
+
+#### Exercise 3
+
+    Refine your output with a criterion in the WHERE clause that filters out any employees whose vacation hours are less then 80% of the maximum amount of vacation hours for any one employee. In other words, return only employees who have at least 80% as much vacation time as the employee with the most vacation time.
+
+    Hint: The query should return 60 rows.
+
+# Correlated Subqueries - Exercises
+#### Exercise 1
+
+    Write a query that outputs all records from the Purchasing.PurchaseOrderHeader table. Include the following columns from the table:
+
+    PurchaseOrderID
+    VendorID
+    OrderDate
+    TotalDue
+
+    Add a derived column called NonRejectedItems which returns, for each purchase order ID in the query output, the number of line items from the Purchasing.PurchaseOrderDetail table which did not have any rejections (i.e., RejectedQty = 0). Use a correlated subquery to do this.
+
+#### Exercise 2
+
+    Modify your query to include a second derived field called MostExpensiveItem.
+
+    This field should return, for each purchase order ID, the UnitPrice of the most expensive item for that order in the Purchasing.PurchaseOrderDetail table.
+
+    Use a correlated subquery to do this as well.
+
+    Hint: Think of the most appropriate aggregate function to use in the correlated subquery for this scenario.
+
+# EXISTS - Exercises
+#### Exercise 1
+
+    Select all records from the Purchasing.PurchaseOrderHeader table such that there is at least one item in the order with an order quantity greater than 500. The individual items tied to an order can be found in the Purchasing.PurchaseOrderDetail table.
+
+    Select the following columns:
+    PurchaseOrderID
+    OrderDate
+    SubTotal
+    TaxAmt
+Sort by purchase order ID.
+
+#### Exercise 2
+
+    Modify your query from Exercise 1 as follows:
+
+    Select all records from the Purchasing.PurchaseOrderHeader table such that there is at least one item in the order with an order quantity greater than 500, AND a unit price greater than $50.00.
+
+    Select ALL columns from the Purchasing.PurchaseOrderHeader table for display in your output.
+
+    Even if you have aliased this table to enable the use of a JOIN or EXISTS, you can still use the SELECT * shortcut to do this. Assuming you have aliased your table "A", simply use "SELECT A.*" to select all columns from that table.
+
+Exercise 3
+
+    Select all records from the Purchasing.PurchaseOrderHeader table such that NONE of the items within the order have a rejected quantity greater than 0.
+
+    Select ALL columns from the Purchasing.PurchaseOrderHeader table using the "SELECT *" shortcut.    
+
+# FOR XML PATH With STUFF - Exercises
+#### Exercise 1
+
+    Create a query that displays all rows from the Production.ProductSubcategory table, and includes the following fields:
+
+    The "Name" field from Production.ProductSubcategory, which should be aliased as "SubcategoryName"
+
+    A derived field called "Products" which displays, for each Subcategory in Production.ProductSubcategory, a semicolon-separated list of all products from Production.Product contained within the given subcategory
+
+    Hint: Production.ProductSubcategory and Production.Product are related by the "ProductSubcategoryID" field.
+
+#### Exercise 2
+
+    Modify the query from Exercise 1 such that only products with a ListPrice value greater than $50 are listed in the "Products" field.
+
+    Hint: Assuming you used a correlated subquery in Exercise 1, keep in mind that you can apply additional criteria to it, just as with any other correlated subquery.
+
+    NOTE: Your query should still include ALL product subcategories, but only list associated products greater than $50. But since there are certain product subcategories that don't have any associated products greater than $50, some rows in your query output may have a NULL value in the product field.
+
+# PIVOT - Exercises
+#### Exercise 1
+
+    Using PIVOT, write a query against the HumanResources.Employee table
+    that summarizes the average amount of vacation time for Sales Representatives, Buyers, and Janitors.
+    Your output should look like the image below.
+![alt text](image.png)
+#### Exercise 2
+
+    Modify your query from Exercise 1 such that the results are broken out by Gender. Alias the Gender field as "Employee Gender" in your output.
+
+    Your output should look like the image below:
+![alt text](image-1.png)
+
+
